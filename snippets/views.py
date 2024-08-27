@@ -1,3 +1,8 @@
-from django.shortcuts import render
+# snippets/views.py
 
-# Create your views here.
+from django.shortcuts import render
+from .models import Snippet
+
+def snippet_list(request):
+    snippets = Snippet.objects.all()
+    return render(request, 'snippets/snippet_list.html', {'snippets': snippets})
