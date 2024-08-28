@@ -1,18 +1,20 @@
 <!-- snippets/templates/snippets/snippet_list.html -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snippet List</title>
 </head>
 <body>
     <h1>Snippet List</h1>
+    <a href="{% url 'create_snippet' %}">Create New Snippet</a>
     <ul>
         {% for snippet in snippets %}
-            <li>{{ snippet.title }}: {{ snippet.code }}</li>
+            <li>
+                <a href="{% url 'snippet_detail' snippet.pk %}">{{ snippet.title }}</a>
+                <a href="{% url 'update_snippet' snippet.pk %}">Edit</a>
+                <a href="{% url 'delete_snippet' snippet.pk %}">Delete</a>
+            </li>
         {% endfor %}
     </ul>
 </body>
