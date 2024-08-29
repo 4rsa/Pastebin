@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snippet Detail</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="content-container">
+        <h1>{{ snippet.title }}</h1>
+        
+        <!-- Snippet content styled as a code block -->
+        <div class="snippet-content">
+            <pre>{{ snippet.content }}</pre>
+        </div>
+        
+        <!-- Action buttons for Edit and Back to List -->
+        <div class="button-group">
+            <a href="{% url 'update_snippet' snippet.id %}" class="button edit-button">Edit</a>
+            <a href="{% url 'snippet_list' %}" class="button back-button">Back to List</a>
+        </div>
+    </div>
+</body>
+</html>
