@@ -1,0 +1,33 @@
+<!-- snippets/templates/snippets/snippet_list.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snippet List</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?">
+
+
+   
+</head>
+<body>
+    <div class="content-container">
+        <h1>Snippet List</h1>
+        <ul class="snippet-list">
+            {% for snippet in snippets %}
+                <li>
+                    <span>
+                        <a href="{% url 'snippet_detail' snippet.id %}">{{ snippet.title }}</a>
+                        <a href="{% url 'update_snippet' snippet.id %}">Update</a>
+                    </span>
+                    <form action="{% url 'delete_snippet' snippet.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'create_snippet' %}" class="button">Create New Snippet</a>
+    </div>
+</body>
+</html>

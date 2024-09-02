@@ -1,0 +1,37 @@
+<!-- snippets/templates/snippets/create_snippet.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Snippet</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    
+</head>
+<body>
+    <div class="container" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+        <h1>Create Snippet</h1>
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Title field with spacing -->
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <!-- Content field with spacing -->
+            <div class="form-group">
+                <label for="content">Content:</label>
+                <textarea id="content" name="content" rows="10" required></textarea>
+            </div>
+            
+            <!-- Submit button -->
+            <button type="submit">Create</button>
+        </form>
+        
+        <!-- Back to List button -->
+        <a href="{% url 'snippet_list' %}" class="button">Back to List</a>
+    </div>
+</body>
+</html>
