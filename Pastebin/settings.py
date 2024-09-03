@@ -26,9 +26,12 @@ SECRET_KEY = 'django-insecure-bc-@j22*j8k=)#qy%7-s)3&zw$d*g)o)f9xiwcas+j4+le4%&o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CSRF_COOKIE_SECURE = False
+CSRF_USE_SESSIONS = False
+
 ALLOWED_HOSTS = []
 
-
+LOGIN_REDIRECT_URL = '/snippets/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,9 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     # Your apps
     'snippets', 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,10 +61,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Pastebin.urls'
 
+# Pastebin/settings.py
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,3 +141,27 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Token Authetification Settings
+# Pastebin/settings.py
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID = 'your-access-key-id'
+AWS_SECRET_ACCESS_KEY = 'your-secret-access-key'
+AWS_STORAGE_BUCKET_NAME = 'your-bucket-name'
+AWS_S3_REGION_NAME = 'your-region'  # e.g., 'us-east-1'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+# Static and Media Files
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+
+# You might want to also configure the location of static files
+# STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
