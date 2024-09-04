@@ -1,5 +1,4 @@
 <!-- snippets/templates/snippets/snippet_detail.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,9 +15,13 @@
         
         <!-- Action buttons for Edit and Back to List -->
         <div class="button-group">
-            <a href="{% url 'update_snippet' snippet.id %}" class="button edit-button">Edit</a>
-            <a href="{% url 'snippet_list' %}" class="button">Back to List</a>
+            {% if snippet.user == request.user %}
+                <a href="{% url 'update_snippet' snippet.id %}?next={{ request.GET.next }}" class="button edit-button">Edit</a>
+            {% endif %}
+            <a href="{% url request.GET.next %}" class="button">Back to List</a>
         </div>
     </div>
 </body>
+</html>
+
 </html>

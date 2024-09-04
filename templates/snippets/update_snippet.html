@@ -30,7 +30,7 @@
         </form>
         
         <!-- Back to List button -->
-        <a href="{% url 'snippet_list' %}" class="button">Back to List</a>
+        <a href="{% url request.GET.next %}" class="button">Back to List</a>
     </div>
 </body>
 </html>

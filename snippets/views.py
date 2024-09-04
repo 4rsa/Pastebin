@@ -29,7 +29,7 @@ def create_snippet(request):
         )
         url = f'https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/snippets/{title}.txt'
         Snippet.objects.create(title=title, url=url, user=request.user)
-        return redirect('snippet_list')
+        return redirect('all_snippets')
     return render(request, 'snippets/create_snippet.html')
 
 # Read Snippet
@@ -45,6 +45,11 @@ def snippet_detail(request, pk):
 @login_required
 def update_snippet(request, pk):
     snippet = get_object_or_404(Snippet, pk=pk)
+    
+    # Ensure only the owner can update the snippet
+    if snippet.user != request.user:
+        return HttpResponseForbidden("You are not allowed to edit this snippet.")
+
     if request.method == 'POST':
         snippet.title = request.POST['title']
         content = request.POST['content']
@@ -66,14 +71,20 @@ def delete_snippet(request, pk):
     # Delete content from S3
     s3_client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=snippet.url.split(f'https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/')[1])
     snippet.delete()
-    return redirect('snippet_list')
+    # Get the 'next' parameter from the request
+    next_url = request.GET.get('next', 'all_snippets')
+    return redirect(next_url)
 
 # List Snippets
 @login_required
-def snippet_list(request):
+def my_snippets(request):
     snippets = Snippet.objects.filter(user=request.user)
-    return render(request, 'snippets/snippet_list.html', {'snippets': snippets})
-    
+    return render(request, 'snippets/my_snippets.html', {'snippets': snippets})
+
+def all_snippets(request):
+    snippets = Snippet.objects.all()  # Get all snippets, regardless of the user
+    return render(request, 'snippets/all_snippets.html', {'snippets': snippets})
+
 # Register
 def register(request):
     if request.method == 'POST':
@@ -81,7 +92,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('snippet_list')
+            return redirect('all_snippets')
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
