@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .models import Snippet
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 # Initialize S3 client
 s3_client = boto3.client(
@@ -80,12 +82,37 @@ def delete_snippet(request, pk):
 # List Snippets
 @login_required
 def my_snippets(request):
-    snippets = Snippet.objects.filter(user=request.user)
-    return render(request, 'snippets/my_snippets.html', {'snippets': snippets})
+    user = request.user
+    snippets = Snippet.objects.filter(user=user)
+    shared_snippets = Snippet.objects.filter(shared_with=user)
+    return render(request, 'snippets/my_snippets.html', {'my_snippets': snippets, 'shared_snippets': shared_snippets})
 
 def all_snippets(request):
     snippets = Snippet.objects.all()  # Get all snippets, regardless of the user
     return render(request, 'snippets/all_snippets.html', {'snippets': snippets})
+
+@login_required
+def share_snippet(request, pk):
+    snippet = get_object_or_404(Snippet, pk=pk)
+    
+    if request.method == 'POST':
+        shared_with = request.POST['shared_with'].split(',')
+        recipients = User.objects.filter(username__in=shared_with)
+        
+        # Check for users that don't exist
+        non_existent_users = set(shared_with) - set(recipients.values_list('username', flat=True))
+        
+        if non_existent_users:
+            # Add an error message for non-existent users
+            messages.error(request, f"The following users do not exist: {', '.join(non_existent_users)}")
+        else:
+            # Share the snippet with valid recipients
+            snippet.shared_with.set(recipients)
+            snippet.save()
+            messages.success(request, "Snippet shared successfully.")
+            return redirect('my_snippets')
+
+    return render(request, 'snippets/share_snippet.html', {'snippet': snippet})
 
 # Register
 def register(request):

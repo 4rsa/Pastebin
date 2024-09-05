@@ -16,12 +16,15 @@
         </div>
 
         <!-- List of user-specific snippets -->
+        <h2>My Snippets</h2>
         <ul class="snippet-list">
-            {% for snippet in snippets %}
+            {% for snippet in my_snippets %}
                 <li>
                     <span>
                         <a href="{% url 'snippet_detail' snippet.id %}?next=my_snippets">{{ snippet.title }}</a>
                         <a href="{% url 'update_snippet' snippet.id %}?next=my_snippets">Update</a>
+                        <!-- Share button -->
+                        <a href="{% url 'share_snippet' snippet.id %}?next=my_snippets">Share</a>
                     </span>
                     <form action="{% url 'delete_snippet' snippet.id %}?next=my_snippets" method="post">
                         {% csrf_token %}
@@ -32,6 +35,18 @@
         </ul>
 
         <a href="{% url 'create_snippet' %}?next=my_snippets" class="button create-snippet">Create New Snippet</a>
+
+        <!-- Shared Snippets Section -->
+        <h2>Shared Snippets</h2>
+        <ul class="snippet-list">
+            {% for snippet in shared_snippets %}
+                <li>
+                    <span>
+                        <a href="{% url 'snippet_detail' snippet.id %}?next=my_snippets">{{ snippet.title }}</a>
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
 
     </div>
 </body>

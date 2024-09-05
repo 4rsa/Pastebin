@@ -143,6 +143,28 @@ textarea#content {
     color: grey;
     font-size: 0.9em;
     margin-left: 20px;
-    border: 1px solid red; /* Debugging style */
 }
 
+/*--------------------------------------------------- Messages Styles -----------------------------------------------------*/
+
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.messages li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.messages li.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.messages li.success {
+    background-color: #d4edda;
+    color: #155724;
+}
