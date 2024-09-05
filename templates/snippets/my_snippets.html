@@ -31,8 +31,8 @@
             {% endfor %}
         </ul>
 
-        <!-- Button to create a new snippet -->
-        <a href="{% url 'create_snippet' %}" class="button create-snippet">Create New Snippet</a>
+        <a href="{% url 'create_snippet' %}?next=my_snippets" class="button create-snippet">Create New Snippet</a>
+
     </div>
 </body>
 </html>

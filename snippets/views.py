@@ -18,10 +18,11 @@ s3_client = boto3.client(
 # Create Snippet
 @login_required
 def create_snippet(request):
+    next_url = request.GET.get('next', 'all_snippets')
+
     if request.method == 'POST':
         title = request.POST['title']
         content = request.POST['content']
-        # Upload content to S3
         s3_client.put_object(
             Bucket=settings.AWS_STORAGE_BUCKET_NAME,
             Key=f'snippets/{title}.txt',
@@ -29,8 +30,9 @@ def create_snippet(request):
         )
         url = f'https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/snippets/{title}.txt'
         Snippet.objects.create(title=title, url=url, user=request.user)
-        return redirect('all_snippets')
-    return render(request, 'snippets/create_snippet.html')
+        return redirect(next_url)  # Redirect to next_url
+    return render(request, 'snippets/create_snippet.html', {'next': next_url})
+
 
 # Read Snippet
 @login_required
@@ -46,14 +48,14 @@ def snippet_detail(request, pk):
 def update_snippet(request, pk):
     snippet = get_object_or_404(Snippet, pk=pk)
     
-    # Ensure only the owner can update the snippet
     if snippet.user != request.user:
         return HttpResponseForbidden("You are not allowed to edit this snippet.")
+
+    next_url = request.GET.get('next', f'snippet_detail/{snippet.pk}')  # Default to snippet detail if no next param
 
     if request.method == 'POST':
         snippet.title = request.POST['title']
         content = request.POST['content']
-        # Upload new content to S3
         s3_client.put_object(
             Bucket=settings.AWS_STORAGE_BUCKET_NAME,
             Key=f'snippets/{snippet.title}.txt',
@@ -61,19 +63,19 @@ def update_snippet(request, pk):
         )
         snippet.url = f'https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/snippets/{snippet.title}.txt'
         snippet.save()
-        return redirect('snippet_detail', pk=snippet.pk)
-    return render(request, 'snippets/update_snippet.html', {'snippet': snippet})
+        return redirect(next_url)  # Redirect to next_url
+    return render(request, 'snippets/update_snippet.html', {'snippet': snippet, 'next': next_url})
+
 
 # Delete Snippet
 @login_required
 def delete_snippet(request, pk):
     snippet = get_object_or_404(Snippet, pk=pk)
-    # Delete content from S3
     s3_client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=snippet.url.split(f'https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/')[1])
     snippet.delete()
-    # Get the 'next' parameter from the request
-    next_url = request.GET.get('next', 'all_snippets')
+    next_url = request.GET.get('next', 'all_snippets')  # Default to 'all_snippets' if no next param
     return redirect(next_url)
+
 
 # List Snippets
 @login_required
