@@ -1,5 +1,4 @@
 <!-- snippets/templates/snippets/create_snippet.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +9,11 @@
 <body>
     <div class="container" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
         <h1>Create Snippet</h1>
+        
+        <!-- Capture next parameter -->
         <form method="post">
             {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
             
             <!-- Title field with spacing -->
             <div class="form-group">
@@ -29,8 +31,8 @@
             <button type="submit">Create</button>
         </form>
         
-        <!-- Back to List button -->
-        <a href="{% url 'snippet_list' %}" class="button">Back to List</a>
+        <!-- Back to List button using the next parameter -->
+        <a href="{% if request.GET.next %}{% url request.GET.next %}{% else %}{% url 'all_snippets' %}{% endif %}" class="button">Back to List</a>
     </div>
 </body>
 </html>

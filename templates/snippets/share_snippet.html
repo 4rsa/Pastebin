@@ -1,0 +1,35 @@
+<!-- snippets/share_snippet.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Share Snippet</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="content-container">
+        <h1>Share "{{ snippet.title }}"</h1>
+
+        <!-- Display messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="shared_with">Share with (User ID or Email):</label>
+                <input type="text" name="shared_with" id="shared_with" required class="form-control">
+            </div>
+            <button type="submit" class="button">Share</button>
+        </form>
+
+        <a href="{% url 'my_snippets' %}" class="button">Back to My Snippets</a>
+    </div>
+</body>
+
+</html>

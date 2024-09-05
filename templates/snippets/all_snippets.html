@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Snippets</title>
+    {% load static %}
+    {% load custom_filters %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="content-container">
+        <h1>All Snippets</h1>
+        <ul class="snippet-list">
+            {% for snippet in snippets %}
+                <li class="snippet-item">
+                    <span>
+                        <a href="{% url 'snippet_detail' snippet.id %}?next=all_snippets">{{ snippet.title }}</a>
+                    </span>
+                    <span class="snippet-time">{{ snippet.created_at|time_ago }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'create_snippet' %}?next=all_snippets" class="button create-snippet">Create New Snippet</a>
+        <a href="{% url 'my_snippets' %}" class="button">My Snippets</a>
+    </div>
+</body>
+</html>
