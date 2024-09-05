@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from .models import Snippet
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 # Initialize S3 client
