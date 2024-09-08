@@ -52,6 +52,7 @@ def create_snippet(request):
 @login_required
 def snippet_detail(request, pk):
     snippet = get_object_or_404(Snippet, pk=pk)
+    snippet.increment_views_count()
     s3_key = snippet.url.split(f'https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/')[1]
 
     try:
@@ -144,8 +145,6 @@ def like_snippet(request, pk):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-
-
 @login_required
 def share_snippet(request, pk):
     snippet = get_object_or_404(Snippet, pk=pk)
@@ -175,14 +174,25 @@ def my_snippets(request):
     shared_snippets = Snippet.objects.filter(shared_with=request.user)
     return render(request, 'snippets/my_snippets.html', {'my_snippets': snippets, 'shared_snippets': shared_snippets})
 
-
 def all_snippets(request):
-    snippets = Snippet.objects.all()
-    return render(request, 'snippets/all_snippets.html', {'snippets': snippets})
+    sort_by = request.GET.get('sort_by', 'created_at')
+    
+    if sort_by == 'likes':
+        snippets = Snippet.objects.all().order_by('-likes_count')
+    elif sort_by == 'alphabet':
+        snippets = Snippet.objects.all().order_by('title')
+    elif sort_by == 'views':
+        snippets = Snippet.objects.all().order_by('-views_count')  # Fixed line
+    else:
+        snippets = Snippet.objects.all().order_by('-created_at')
+    
+    context = {
+        'snippets': snippets,
+    }
+    return render(request, 'snippets/all_snippets.html', context)
 
 
 # User Registration
-
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
