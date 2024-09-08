@@ -1,9 +1,9 @@
-<!-- snippets/templates/snippets/snippet_detail.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Snippet Detail</title>
     {% load static %}
+    <script src="{% static 'js/like_snippet.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -12,15 +12,26 @@
         
         <!-- Snippet content displayed directly in a read-only textarea -->
         <textarea class="snippet-content" readonly>{{ content }}</textarea>
+
+        <p id="likes-count">Likes: {{ snippet.likes_count }}</p>
         
+        <!-- Like/Unlike Button -->
+        <form id="like-form" method="post" action="{% url 'like_snippet' snippet.id %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            {% if request.user in snippet.likes.all %}
+                <button type="submit" id="like-button">Unlike</button>
+            {% else %}
+                <button type="submit" id="like-button">Like</button>
+            {% endif %}
+        </form>
+
         <!-- Action buttons for Edit and Back to List -->
         <div class="button-group">
             {% if snippet.user == request.user %}
-                <a href="{% url 'update_snippet' snippet.id %}?next={{ request.GET.next }}" class="button edit-button">Edit</a>
+                <a href="{% url 'update_snippet' snippet.id %}" class="button edit-button">Edit</a>
             {% endif %}
             <a href="{% url request.GET.next %}" class="button">Back to List</a>
         </div>
-    </div>
+    </div> 
 </body>
-</html>
 </html>

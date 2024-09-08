@@ -145,6 +145,12 @@ textarea#content {
     margin-left: 20px;
 }
 
+.snippet-likes {
+    color: grey;
+    font-size: 0.9em;
+    margin-left: 20px;
+}
+
 /*--------------------------------------------------- Messages Styles -----------------------------------------------------*/
 
 .messages {

@@ -16,6 +16,7 @@
                         <a href="{% url 'snippet_detail' snippet.id %}?next=all_snippets">{{ snippet.title }}</a>
                     </span>
                     <span class="snippet-time">{{ snippet.created_at|time_ago }}</span>
+                    <span class="snippet-likes">Likes: {{ snippet.likes_count }}</span> 
                 </li>
             {% endfor %}
         </ul>
