@@ -116,10 +116,15 @@ textarea#content {
     background-color: #eaeaea;
 }
 
+.snippet-title {
+    flex: 1; /* Flexbox will make it take up the remaining space */
+    text-align: left;
+    margin-right: 15px;
+}
+
 .snippet-list a {
     text-decoration: none;
     color: #007bff;
-    margin-right: 10px;
     transition: color 0.3s;
 }
 
@@ -127,23 +132,17 @@ textarea#content {
     color: #0056b3;
 }
 
-.snippet-list form {
-    display: inline;
-    margin: 0;
-}
-
-.snippet-item {
+.snippet-info-group {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 15px; /* Space between each info item */
 }
 
-.snippet-time {
+.snippet-info {
     color: grey;
     font-size: 0.9em;
-    margin-left: 20px;
 }
+
 
 /*--------------------------------------------------- Messages Styles -----------------------------------------------------*/
 
@@ -167,4 +166,29 @@ textarea#content {
 .messages li.success {
     background-color: #d4edda;
     color: #155724;
+}
+
+/*------------------------------------------------------ Dropdown Menu Styles ------------------------------------------------------*/
+
+.sorting-options {
+    margin-bottom: 20px;
+}
+
+#sort-by {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#sort-by:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#sort-by option {
+    padding: 10px;
 }

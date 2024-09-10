@@ -9,18 +9,46 @@
 <body>
     <div class="content-container">
         <h1>All Snippets</h1>
+        
+        <!-- Sorting Dropdown -->
+        <div class="sorting-options">
+            <label for="sort-by">Sort by:</label>
+            <select id="sort-by" onchange="sortSnippets()">
+                <option value="" disabled selected>Choose sorting method</option>
+                <option value="?sort_by=created_at" {% if request.GET.sort_by == 'created_at' %}selected{% endif %}>Time</option>
+                <option value="?sort_by=likes" {% if request.GET.sort_by == 'likes' %}selected{% endif %}>Impression</option>
+                <option value="?sort_by=alphabet" {% if request.GET.sort_by == 'alphabet' %}selected{% endif %}>Alphabet</option>
+                <option value="?sort_by=views" {% if request.GET.sort_by == 'views' %}selected{% endif %}>Views</option>
+            </select>
+        </div>
+        
         <ul class="snippet-list">
             {% for snippet in snippets %}
                 <li class="snippet-item">
-                    <span>
+                    <span class="snippet-title">
                         <a href="{% url 'snippet_detail' snippet.id %}?next=all_snippets">{{ snippet.title }}</a>
                     </span>
-                    <span class="snippet-time">{{ snippet.created_at|time_ago }}</span>
+                    <div class="snippet-info-group">
+                        <span class="snippet-info">{{ snippet.created_at|time_ago }}</span>
+                        <span class="snippet-info">Likes: {{ snippet.likes_count }}</span>
+                        <span class="snippet-info">Views: {{ snippet.views_count }}</span>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
+        
         <a href="{% url 'create_snippet' %}?next=all_snippets" class="button create-snippet">Create New Snippet</a>
         <a href="{% url 'my_snippets' %}" class="button">My Snippets</a>
     </div>
+
+    <script>
+        function sortSnippets() {
+            var select = document.getElementById("sort-by");
+            var selectedValue = select.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        }
+    </script>
 </body>
 </html>
