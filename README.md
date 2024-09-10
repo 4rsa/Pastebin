@@ -1,6 +1,6 @@
 <h1 align="center" id="title">Pastebin</h1>
 
-<p align="center"><img src="" alt="project-image"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/b4e0a756-3835-4971-8c2e-12393a239945" width="160" height="170" alt="project-image"></p>
 
 <p id="description">Pastebin is a Django-based web application that allows users to create view and manage text snippets. Users can register log in log out and create text snippets which are stored in Amazon S3. The application features session-based authorization snippet likes and view counts. It is hosted on an EC2 instance with a load balancer and uses Redis for caching popular snippets.</p>
 
